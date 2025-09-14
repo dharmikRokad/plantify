@@ -44,9 +44,12 @@ class _HomePageState extends State<HomePage> {
         imageQuality: 80,
       );
       
-      if (image != null && mounted) {
+      if (image == null) return;
+      final imageBytes = await image.readAsBytes();
+
+      if (mounted) {
         context.read<PlantIdentificationBloc>().add(
-          PlantIdentifyRequested(image.path),
+          PlantIdentifyRequested(imageBytes),
         );
       }
     } catch (e) {
@@ -107,102 +110,103 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHomeContent() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome back,',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Text(
-                  'Plant Explorer',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
+    return BlocListener<PlantIdentificationBloc, PlantIdentificationState>(
+      listener: (context, state) {
+        if (state is PlantIdentificationSuccess) {
+          Navigator.pushNamed(context, '/result', arguments: state.scan);
+        }
+      },
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.eco,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(height: 16),
                   Text(
-                    'Discover Plants',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
+                    'Welcome back,',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 8),
                   Text(
-                    'Point your camera at any plant and let our AI identify it for you. Get detailed information about care instructions and interesting facts.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    'Plant Explorer',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 32),
-            BlocBuilder<PlantIdentificationBloc, PlantIdentificationState>(
-              builder: (context, state) {
-                if (state is PlantIdentificationLoading) {
-                  return const Center(
-                    child: Column(
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 16),
-                        Text('Identifying plant...'),
-                      ],
+              const SizedBox(height: 32),
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.eco,
+                      size: 48,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                  );
-                }
-
-                if (state is PlantIdentificationError) {
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      'Error: ${state.message}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onErrorContainer,
+                    const SizedBox(height: 16),
+                    Text(
+                      'Discover Plants',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
-                  );
-                }
+                    const SizedBox(height: 8),
+                    Text(
+                      'Point your camera at any plant and let our AI identify it for you. Get detailed information about care instructions and interesting facts.',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+              BlocBuilder<PlantIdentificationBloc, PlantIdentificationState>(
+                builder: (context, state) {
+                  if (state is PlantIdentificationLoading) {
+                    return const Center(
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 16),
+                          Text('Identifying plant...'),
+                        ],
+                      ),
+                    );
+                  }
 
-                if (state is PlantIdentificationSuccess) {
-                  Future.microtask(() {
-                    Navigator.pushNamed(context, '/result', arguments: state.scan);
-                  });
-                }
+                  if (state is PlantIdentificationError) {
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.errorContainer,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Error: ${state.message}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    );
+                  }
 
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

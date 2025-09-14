@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           'Discover the world of plants',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimaryContainer
-                                .withValues(alpha: 0.8),
+                                .withAlpha(204),
                           ),
                         ),
                       ],
@@ -152,7 +152,7 @@ class _SettingsPageState extends State<SettingsPage> {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.outline.withAlpha(51),
         ),
       ),
       child: Column(

@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:myapp/features/plant_identification/domain/entities/plant_scan.dart';
@@ -28,7 +29,7 @@ class PlantIdentificationBloc extends Bloc<PlantIdentificationEvent, PlantIdenti
     emit(PlantIdentificationLoading());
     
     final result = await identifyPlant(
-      IdentifyPlantParams(imagePath: event.imagePath),
+      IdentifyPlantParams(imageBytes: event.imageBytes),
     );
     
     result.fold(

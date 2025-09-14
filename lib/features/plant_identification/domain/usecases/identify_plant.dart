@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:myapp/core/errors/failures.dart';
@@ -12,7 +13,7 @@ class IdentifyPlant implements UseCase<PlantScan, IdentifyPlantParams> {
 
   @override
   Future<Either<Failure, PlantScan>> call(IdentifyPlantParams params) async {
-    final result = await repository.identifyPlant(params.imagePath);
+    final result = await repository.identifyPlant(params.imageBytes);
     return result.fold(
       (failure) => Left(failure),
       (scan) async {
@@ -24,10 +25,10 @@ class IdentifyPlant implements UseCase<PlantScan, IdentifyPlantParams> {
 }
 
 class IdentifyPlantParams extends Equatable {
-  const IdentifyPlantParams({required this.imagePath});
+  const IdentifyPlantParams({required this.imageBytes});
 
-  final String imagePath;
+  final Uint8List imageBytes;
 
   @override
-  List<Object> get props => [imagePath];
+  List<Object> get props => [imageBytes];
 }

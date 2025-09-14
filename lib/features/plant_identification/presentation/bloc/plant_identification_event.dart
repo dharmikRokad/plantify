@@ -8,12 +8,12 @@ sealed class PlantIdentificationEvent extends Equatable {
 }
 
 class PlantIdentifyRequested extends PlantIdentificationEvent {
-  const PlantIdentifyRequested(this.imagePath);
+  const PlantIdentifyRequested(this.imageBytes);
 
-  final String imagePath;
+  final Uint8List imageBytes;
 
   @override
-  List<Object> get props => [imagePath];
+  List<Object> get props => [imageBytes];
 }
 
 class PlantHistoryRequested extends PlantIdentificationEvent {}

@@ -11,7 +11,7 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentPage = 0;
 
   final List<OnboardingContent> _pages = [
@@ -70,7 +70,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             height: 250,
             width: 250,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              color: Theme.of(context).primaryColor.withAlpha(25),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
@@ -186,7 +186,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             borderRadius: BorderRadius.circular(4),
             color: _currentPage == i
                 ? Theme.of(context).primaryColor
-                : Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                : Theme.of(context).primaryColor.withAlpha(77),
           ),
         ),
       );

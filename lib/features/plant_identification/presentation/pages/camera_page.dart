@@ -55,10 +55,11 @@ class _CameraPageState extends State<CameraPage> {
 
     try {
       final XFile picture = await _cameraController!.takePicture();
+      final imageBytes = await picture.readAsBytes();
       
       if (mounted) {
         context.read<PlantIdentificationBloc>().add(
-          PlantIdentifyRequested(picture.path),
+          PlantIdentifyRequested(imageBytes),
         );
         Navigator.pop(context);
       }
@@ -144,7 +145,7 @@ class _CameraPageState extends State<CameraPage> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
+                      color: Colors.black.withAlpha(128),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(

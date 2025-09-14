@@ -1,6 +1,6 @@
+import 'package:myapp/features/plant_identification/data/datasources/plant_identification_remote_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myapp/features/plant_identification/data/datasources/plant_identification_local_data_source.dart';
-import 'package:myapp/features/plant_identification/data/datasources/plant_identification_remote_data_source.dart';
 import 'package:myapp/features/plant_identification/data/repositories/plant_identification_repository_impl.dart';
 import 'package:myapp/features/plant_identification/domain/repositories/plant_identification_repository.dart';
 import 'package:myapp/features/plant_identification/domain/usecases/identify_plant.dart';
@@ -15,14 +15,14 @@ class ServiceLocator {
   ServiceLocator._internal();
 
   late SharedPreferences _sharedPreferences;
-  
+
   // Repositories
   late PlantIdentificationRepository _plantIdentificationRepository;
   late SettingsRepository _settingsRepository;
-  
+
   // Use Cases
   late IdentifyPlant _identifyPlant;
-  
+
   // BLoCs
   PlantIdentificationBloc? _plantIdentificationBloc;
   SettingsBloc? _settingsBloc;
@@ -38,7 +38,9 @@ class ServiceLocator {
     final plantLocalDataSource = PlantIdentificationLocalDataSourceImpl(
       sharedPreferences: _sharedPreferences,
     );
+
     final plantRemoteDataSource = PlantIdentificationRemoteDataSourceImpl();
+
     _plantIdentificationRepository = PlantIdentificationRepositoryImpl(
       localDataSource: plantLocalDataSource,
       remoteDataSource: plantRemoteDataSource,
@@ -55,15 +57,14 @@ class ServiceLocator {
   }
 
   // Getters for BLoCs
-  PlantIdentificationBloc get plantIdentificationBloc => _plantIdentificationBloc ??= 
-    PlantIdentificationBloc(
-      identifyPlant: _identifyPlant,
-      repository: _plantIdentificationRepository,
-    );
+  PlantIdentificationBloc get plantIdentificationBloc =>
+      _plantIdentificationBloc ??= PlantIdentificationBloc(
+        identifyPlant: _identifyPlant,
+        repository: _plantIdentificationRepository,
+      );
 
-  SettingsBloc get settingsBloc => _settingsBloc ??= SettingsBloc(
-    repository: _settingsRepository,
-  );
+  SettingsBloc get settingsBloc =>
+      _settingsBloc ??= SettingsBloc(repository: _settingsRepository);
 
   void dispose() {
     _plantIdentificationBloc?.close();
