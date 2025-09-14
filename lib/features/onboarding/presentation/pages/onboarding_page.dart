@@ -62,13 +62,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildPage(OnboardingContent content) {
     return Padding(
-      padding: const EdgeInsets.all(40.0),
+      padding: const EdgeInsets.only(top: 40.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 300,
-            width: 300,
+            height: 250,
+            width: 250,
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
@@ -79,7 +79,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               color: Theme.of(context).primaryColor,
             ),
           ),
-          const SizedBox(height: 60),
+          const SizedBox(height: 30),
           Text(
             content.title,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(

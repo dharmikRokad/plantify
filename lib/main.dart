@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/core/value_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myapp/theme.dart';
 import 'package:myapp/injection_container.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _showOnboarding = true;
+  ValueCubit<bool> _showOnboarding = ValueCubit(true);
   bool _isLoading = true;
 
   @override
@@ -39,7 +40,7 @@ class _MyAppState extends State<MyApp> {
     
     if (mounted) {
       setState(() {
-        _showOnboarding = !hasCompletedOnboarding;
+        _showOnboarding.value = !hasCompletedOnboarding;
         _isLoading = false;
       });
     }
@@ -47,9 +48,7 @@ class _MyAppState extends State<MyApp> {
 
   void _onOnboardingComplete() {
     if (mounted) {
-      setState(() {
-        _showOnboarding = false;
-      });
+        _showOnboarding.value = false;
     }
   }
 
@@ -83,7 +82,7 @@ class _MyAppState extends State<MyApp> {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: themeMode,
-            home: _showOnboarding 
+            home: _showOnboarding.value
                 ? OnboardingPage(onComplete: _onOnboardingComplete) 
                 : const HomePage(),
             onGenerateRoute: (settings) {
