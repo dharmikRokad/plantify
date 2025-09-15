@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/features/splash/pages/splash_page.dart';
-import 'package:myapp/theme.dart';
+import 'package:myapp/core/theme.dart';
 import 'package:myapp/injection_container.dart';
 import 'package:myapp/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:myapp/features/plant_identification/presentation/pages/plant_result_page.dart';
