@@ -17,14 +17,16 @@ class PlantScanModel extends PlantScan {
   });
 
   factory PlantScanModel.fromJson(Map<String, dynamic> json) => PlantScanModel(
-    id: json['id'] as String,
-    imagePath: json['imagePath'] as String,
+    id: json['id'] ?? DateTime.now().toIso8601String(),
+    imagePath: json['imagePath'] ?? '',
     plantName: json['plantName'] as String,
     scientificName: json['scientificName'] as String,
     description: json['description'] as String,
     careInstructions: json['careInstructions'] as String,
-    confidence: (json['confidence'] as num).toDouble(),
-    timestamp: DateTime.parse(json['timestamp'] as String),
+    confidence: (json['confidence'] ?? 0.0).toDouble(),
+    timestamp: json['timestamp'] == null
+        ? DateTime.now()
+        : DateTime.parse(json['timestamp']),
     isFavorite: json['isFavorite'] as bool? ?? false,
     commonNames: (json['commonNames'] as List<dynamic>?)?.cast<String>(),
     family: json['family'] as String?,
