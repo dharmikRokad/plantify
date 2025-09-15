@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/features/home/presentation/pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPage extends StatefulWidget {
-  final VoidCallback? onComplete;
-  
-  const OnboardingPage({super.key, this.onComplete});
+  const OnboardingPage({super.key});
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
@@ -17,17 +16,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final List<OnboardingContent> _pages = [
     OnboardingContent(
       title: 'Welcome to Evergreen',
-      description: 'Your personal plant identification companion. Discover the world of plants with AI-powered recognition.',
+      description:
+          'Your personal plant identification companion. Discover the world of plants with AI-powered recognition.',
       imagePath: 'assets/onboarding_1.png',
     ),
     OnboardingContent(
       title: 'Snap & Identify',
-      description: 'Simply take a photo of any plant and get instant identification with detailed information.',
+      description:
+          'Simply take a photo of any plant and get instant identification with detailed information.',
       imagePath: 'assets/onboarding_2.png',
     ),
     OnboardingContent(
       title: 'Save Your Discoveries',
-      description: 'Keep track of all your plant identifications and mark your favorites for easy access.',
+      description:
+          'Keep track of all your plant identifications and mark your favorites for easy access.',
       imagePath: 'assets/onboarding_3.png',
     ),
   ];
@@ -70,13 +72,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
             height: 250,
             width: 250,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withAlpha(25),
+              color: Theme.of(context).colorScheme.primary.withAlpha(25),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
               _getIconForPage(_currentPage),
               size: 120,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(height: 30),
@@ -84,7 +86,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             content.title,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.primary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -152,9 +154,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
                   ),
@@ -185,8 +190,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             color: _currentPage == i
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).primaryColor.withAlpha(77),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.primary.withAlpha(77),
           ),
         ),
       );
@@ -197,9 +202,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_completed', true);
-    
-    if (mounted && widget.onComplete != null) {
-      widget.onComplete!();
+
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
   }
 }
