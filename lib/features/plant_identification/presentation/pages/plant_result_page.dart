@@ -1,13 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/core/value_cubit.dart';
 import 'package:myapp/features/plant_identification/domain/entities/plant_scan.dart';
 import 'package:myapp/features/plant_identification/presentation/bloc/plant_identification_bloc.dart';
 
 class PlantResultPage extends StatelessWidget {
-  const PlantResultPage({required this.scan, super.key});
+  PlantResultPage({required this.scan, super.key}) {
+    isFavourite = ValueCubit(scan.isFavorite);
+  }
 
   final PlantScan scan;
+
+  ValueCubit<bool>? isFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +20,17 @@ class PlantResultPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Plant Identified'),
         actions: [
-          IconButton(
-            onPressed: () => _toggleFavorite(context),
-            icon: Icon(
-              scan.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: scan.isFavorite ? Colors.red : null,
-            ),
+          BlocBuilder<ValueCubit<bool>, bool>(
+            bloc: isFavourite,
+            builder: (context, state) {
+              return IconButton(
+                onPressed: () => _toggleFavorite(context),
+                icon: Icon(
+                  state ? Icons.favorite : Icons.favorite_border,
+                  color: state ? Colors.red : null,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -75,7 +85,7 @@ class PlantResultPage extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -89,28 +99,32 @@ class PlantResultPage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  
+
                   // Scientific Name
                   Text(
                     scan.scientificName,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontStyle: FontStyle.italic,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.8),
                     ),
                   ),
-                  
+
                   if (scan.family != null) ...[
                     const SizedBox(height: 4),
                     Text(
                       'Family: ${scan.family}',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Description
                   _buildSection(
                     context,
@@ -118,9 +132,9 @@ class PlantResultPage extends StatelessWidget {
                     scan.description,
                     Icons.info_outline,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Care Instructions
                   _buildSection(
                     context,
@@ -128,8 +142,9 @@ class PlantResultPage extends StatelessWidget {
                     scan.careInstructions,
                     Icons.eco,
                   ),
-                  
-                  if (scan.commonNames != null && scan.commonNames!.isNotEmpty) ...[
+
+                  if (scan.commonNames != null &&
+                      scan.commonNames!.isNotEmpty) ...[
                     const SizedBox(height: 24),
                     _buildSection(
                       context,
@@ -138,7 +153,7 @@ class PlantResultPage extends StatelessWidget {
                       Icons.label_outline,
                     ),
                   ],
-                  
+
                   if (scan.origin != null) ...[
                     const SizedBox(height: 24),
                     _buildSection(
@@ -148,9 +163,9 @@ class PlantResultPage extends StatelessWidget {
                       Icons.public,
                     ),
                   ],
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Timestamp
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -158,7 +173,9 @@ class PlantResultPage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outline.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -166,14 +183,19 @@ class PlantResultPage extends StatelessWidget {
                         Icon(
                           Icons.access_time,
                           size: 16,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           'Scanned on ${_formatDate(scan.timestamp)}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.6),
+                              ),
                         ),
                       ],
                     ),
@@ -198,11 +220,7 @@ class PlantResultPage extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
-              icon,
-              size: 20,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 8),
             Text(
               title,
@@ -218,22 +236,20 @@ class PlantResultPage extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+            color: Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Text(
-            content,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text(content, style: Theme.of(context).textTheme.bodyMedium),
         ),
       ],
     );
   }
 
   void _toggleFavorite(BuildContext context) {
-    context.read<PlantIdentificationBloc>().add(
-      PlantFavoriteToggled(scan.id),
-    );
+    context.read<PlantIdentificationBloc>().add(PlantFavoriteToggled(scan.id));
+    isFavourite?.value = !(isFavourite?.value ?? false);
   }
 
   String _formatDate(DateTime date) {

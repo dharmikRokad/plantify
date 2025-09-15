@@ -8,7 +8,8 @@ import 'package:myapp/features/plant_identification/domain/repositories/plant_id
 part 'plant_identification_event.dart';
 part 'plant_identification_state.dart';
 
-class PlantIdentificationBloc extends Bloc<PlantIdentificationEvent, PlantIdentificationState> {
+class PlantIdentificationBloc
+    extends Bloc<PlantIdentificationEvent, PlantIdentificationState> {
   PlantIdentificationBloc({
     required this.identifyPlant,
     required this.repository,
@@ -27,11 +28,11 @@ class PlantIdentificationBloc extends Bloc<PlantIdentificationEvent, PlantIdenti
     Emitter<PlantIdentificationState> emit,
   ) async {
     emit(PlantIdentificationLoading());
-    
+
     final result = await identifyPlant(
       IdentifyPlantParams(imageBytes: event.imageBytes),
     );
-    
+
     result.fold(
       (failure) => emit(PlantIdentificationError(failure.message)),
       (scan) => emit(PlantIdentificationSuccess(scan)),
@@ -43,9 +44,9 @@ class PlantIdentificationBloc extends Bloc<PlantIdentificationEvent, PlantIdenti
     Emitter<PlantIdentificationState> emit,
   ) async {
     emit(PlantHistoryLoading());
-    
+
     final result = await repository.getPlantScans();
-    
+
     result.fold(
       (failure) => emit(PlantHistoryError(failure.message)),
       (scans) => emit(PlantHistoryLoaded(scans)),
@@ -57,7 +58,7 @@ class PlantIdentificationBloc extends Bloc<PlantIdentificationEvent, PlantIdenti
     Emitter<PlantIdentificationState> emit,
   ) async {
     final result = await repository.toggleFavorite(event.scanId);
-    
+
     result.fold(
       (failure) => emit(PlantIdentificationError(failure.message)),
       (_) => add(PlantHistoryRequested()),
@@ -69,7 +70,7 @@ class PlantIdentificationBloc extends Bloc<PlantIdentificationEvent, PlantIdenti
     Emitter<PlantIdentificationState> emit,
   ) async {
     final result = await repository.deletePlantScan(event.scanId);
-    
+
     result.fold(
       (failure) => emit(PlantIdentificationError(failure.message)),
       (_) => add(PlantHistoryRequested()),
