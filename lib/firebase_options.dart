@@ -49,26 +49,24 @@ class DefaultFirebaseOptions {
     messagingSenderId: '825977772000',
     projectId: 'plant-app-gemini-123',
     authDomain: 'plant-app-gemini-123.firebaseapp.com',
-    storageBucket: 'plant-app-gemini-123.appspot.com',
+    storageBucket: 'plant-app-gemini-123.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: '',
-    appId: '1:825977772000:android:a93f1b6d94824a7d3a7d85',
+    apiKey: 'AIzaSyCyqt08PeLdJaHK869xv02U6PqP281iZ4I',
+    appId: '1:825977772000:android:3267fbffde7ddc3c3a7d85',
     messagingSenderId: '825977772000',
     projectId: 'plant-app-gemini-123',
-    storageBucket: 'plant-app-gemini-123.appspot.com',
+    storageBucket: 'plant-app-gemini-123.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: '',
-    appId: '1:825977772000:ios:f63116de94e239d43a7d85',
+    apiKey: 'AIzaSyDwKDOCzpsAbAgJI1gLLNvE9HzV_5ENaTw',
+    appId: '1:825977772000:ios:d6da3b64b756dd1b3a7d85',
     messagingSenderId: '825977772000',
     projectId: 'plant-app-gemini-123',
-    storageBucket: 'plant-app-gemini-123.appspot.com',
-    iosClientId:
-        '825977772000-8l4i5j0j3v6n4g0p3b2a1s0f9e8d7c6b.apps.googleusercontent.com',
-    iosBundleId: 'com.example.myapp',
+    storageBucket: 'plant-app-gemini-123.firebasestorage.app',
+    iosBundleId: 'com.plantify.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

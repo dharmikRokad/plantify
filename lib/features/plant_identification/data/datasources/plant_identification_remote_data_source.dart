@@ -7,15 +7,18 @@ abstract class PlantIdentificationRemoteDataSource {
   Future<PlantScanModel> identifyPlant(Uint8List imageBytes);
 }
 
-class PlantIdentificationRemoteDataSourceImpl implements PlantIdentificationRemoteDataSource {
+class PlantIdentificationRemoteDataSourceImpl
+    implements PlantIdentificationRemoteDataSource {
   @override
   Future<PlantScanModel> identifyPlant(Uint8List imageBytes) async {
-    final model = FirebaseAI.vertexAI().generativeModel(model: 'gemini-1.5-flash');
-      final content = [Content.multi([
+    final model = FirebaseAI.googleAI().generativeModel(
+      model: 'gemini-1.5-flash',
+    );
+    final content = [
+      Content.multi([
         TextPart('Identify the plant in the image.'),
         InlineDataPart('image/jpeg', imageBytes),
-        TextPart(
-          '''
+        TextPart('''
 The response should be formatted as the following example JSON:
 {
   'plantName': 'Snake Plant',
@@ -26,20 +29,22 @@ The response should be formatted as the following example JSON:
   'origin': 'West Africa',
   'commonNames': ['Mother-in-law\'s Tongue', 'Viper\'s Bowstring Hemp', 'Saint George\'s Sword'],
 }
-          '''
-        ),
-      ])];
-      final response = await model.generateContent(content);
+          '''),
+      ]),
+    ];
+    final response = await model.generateContent(content);
 
-        // This is a simplified version. In a real app, you'd parse the response
-        // and create a proper PlantScan object.
-        final scan = PlantScanModel.fromJson(
-          jsonDecode(response.text
+    // This is a simplified version. In a real app, you'd parse the response
+    // and create a proper PlantScan object.
+    final scan = PlantScanModel.fromJson(
+      jsonDecode(
+        response.text
                 ?.replaceAll(RegExp(r'```json', caseSensitive: false), '')
                 .replaceAll('```', '')
                 .trim() ??
-            '{}',)
-        );
-        return scan;
+            '{}',
+      ),
+    );
+    return scan;
   }
 }
