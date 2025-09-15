@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCyqt08PeLdJaHK869xv02U6PqP281iZ4I',
-    appId: '1:825977772000:android:3267fbffde7ddc3c3a7d85',
+    appId: '1:825977772000:android:f1cbf3b330107d553a7d85',
     messagingSenderId: '825977772000',
     projectId: 'plant-app-gemini-123',
     storageBucket: 'plant-app-gemini-123.firebasestorage.app',
