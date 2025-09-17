@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myapp/core/value_cubit.dart';
 import 'package:myapp/features/plant_identification/presentation/bloc/plant_identification_bloc.dart';
 import 'package:myapp/features/plant_identification/presentation/pages/camera_page.dart';
 import 'package:myapp/features/plant_identification/presentation/pages/history_page.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  ValueCubit<int> _selectedIndex = ValueCubit(0);
   final PageController _pageController = PageController();
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -28,14 +29,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
+  void _onItemTapped(int index) => _selectedIndex.value = index;
 
   Future<void> _pickImageFromGallery() async {
     try {
@@ -43,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         source: ImageSource.gallery,
         imageQuality: 80,
       );
-      
+
       if (image == null) return;
       final imageBytes = await image.readAsBytes();
 
@@ -54,9 +48,9 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
     }
   }
@@ -70,42 +64,42 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        key: const ValueKey('main_page_view'),
-        controller: _pageController,
-        onPageChanged: (index) => setState(() => _selectedIndex = index),
-        children: [
-          _buildHomeContent(),
-          const HistoryPage(),
-          const SettingsPage(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return BlocBuilder<ValueCubit<int>, int>(
+      bloc: _selectedIndex,
+      builder: (context, state) {
+        return Scaffold(
+          body: IndexedStack(
+            index: state,
+            children: [
+              _buildHomeContent(),
+              const HistoryPage(),
+              const SettingsPage(),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: state,
+            onTap: _onItemTapped,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.history),
+                label: 'History',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
-      floatingActionButton: _selectedIndex == 0 
-          ? FloatingActionButton.extended(
-              onPressed: () => _showCameraOptions(),
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Scan Plant'),
-            )
-          : null,
+          floatingActionButton: state == 0
+              ? FloatingActionButton.extended(
+                  onPressed: () => _showCameraOptions(),
+                  icon: const Icon(Icons.camera_alt),
+                  label: const Text('Scan Plant'),
+                )
+              : null,
+        );
+      },
     );
   }
 
@@ -157,9 +151,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 16),
                     Text(
                       'Discover Plants',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Text(

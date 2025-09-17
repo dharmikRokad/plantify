@@ -33,18 +33,20 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Text(
-            'Welcome to',
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-          Text(
-            'PLANTIFY',
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-          ),
-        ],
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            Text(
+              'Welcome to',
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+            Text(
+              'PLANTIFY',
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ],
+        ),
       ),
     );
   }
